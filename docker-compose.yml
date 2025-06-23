@@ -53,5 +53,63 @@ services:
     volumes:
       - auth-user-dbdata:/var/lib/postgresql/data
 
+  # 👤 register-user microservice
+  register-user:
+    build:
+      context: ./apps/auth-domain/register-user
+      dockerfile: Dockerfile
+    container_name: register-user
+    depends_on:
+      - kafka
+      - register-user-db
+    env_file:
+      - ./apps/auth-domain/register-user/.env
+    volumes:
+      - ./apps/auth-domain/register-user:/app
+    restart: always
+
+  # 🗃️ register-user PostgreSQL database
+  register-user-db:
+    image: postgres:15
+    container_name: register-user-db
+    ports:
+      - "5441:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: register_user_db
+    volumes:
+      - register-user-dbdata:/var/lib/postgresql/data
+
+  # 🔐 login-user microservice
+  login-user:
+    build:
+      context: ./apps/auth-domain/login-user
+      dockerfile: Dockerfile
+    container_name: login-user
+    depends_on:
+      - kafka
+      - login-user-db
+    env_file:
+      - ./apps/auth-domain/login-user/.env
+    volumes:
+      - ./apps/auth-domain/login-user:/app
+    restart: always
+
+  # 🗃️ login-user PostgreSQL database
+  login-user-db:
+    image: postgres:15
+    container_name: login-user-db
+    ports:
+      - "5442:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: login_user_db
+    volumes:
+      - login-user-dbdata:/var/lib/postgresql/data
+
 volumes:
   auth-user-dbdata:
+  register-user-dbdata:
+  login-user-dbdata:
