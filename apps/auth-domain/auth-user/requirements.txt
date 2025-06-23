@@ -1,4 +1,2 @@
-fastapi
-uvicorn
-asyncpg
-python-dotenv
+kafka-python==2.0.2
+PyJWT==2.8.0
