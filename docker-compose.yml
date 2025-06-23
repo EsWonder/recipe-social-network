@@ -1,0 +1,49 @@
+# version: '3.9' ← Puedes dejarlo o eliminarlo (ya es obsoleto)
+
+services:
+  register-user:
+    build:
+      context: ./apps/auth-domain/register-user
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3000"
+    env_file:
+      - ./apps/auth-domain/register-user/.env
+    depends_on:
+      - register-user-db
+
+  register-user-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: register_user_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - register_user_pgdata:/var/lib/postgresql/data
+
+  auth-user:
+    build:
+      context: ./apps/auth-domain/auth-user
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3003"
+    env_file:
+      - ./apps/auth-domain/auth-user/.env
+    depends_on:
+      - auth-user-db
+
+  auth-user-db:
+    image: postgres:15
+    container_name: auth-user-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: auth_user_db
+    volumes:
+      - auth-user-dbdata:/var/lib/postgresql/data
+
+volumes:
+  register_user_pgdata:
+  auth-user-dbdata:
