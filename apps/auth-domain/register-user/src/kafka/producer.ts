@@ -6,11 +6,24 @@ const kafka = new Kafka({
 });
 
 const producer = kafka.producer();
-producer.connect();
 
-export const sendUserCreated = async (user: { id: number, email: string }) => {
-  await producer.send({
-    topic: "user.created",
-    messages: [{ value: JSON.stringify(user) }]
-  });
+export const connectProducer = async () => {
+  try {
+    await producer.connect();
+    console.log("✅ Kafka producer connected");
+  } catch (err) {
+    console.error("❌ Kafka producer connection failed:", err);
+  }
+};
+
+export const sendUserCreated = async (user: { id: number; email: string }) => {
+  try {
+    await producer.send({
+      topic: "user.created",
+      messages: [{ value: JSON.stringify(user) }]
+    });
+    console.log("📤 Event sent to Kafka: user.created");
+  } catch (err) {
+    console.error("❌ Failed to send Kafka event:", err);
+  }
 };
