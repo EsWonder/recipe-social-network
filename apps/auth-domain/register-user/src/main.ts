@@ -1,8 +1,16 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import express from "express";
+import userRoutes from "./routes/user.routes";
+import path from "path";
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
-}
-bootstrap();
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use("/frontend", express.static(path.join(__dirname, "../frontend")));
+app.use("/register", userRoutes);
+
+app.get("/", (_, res) => res.json({ message: "Register User Microservice is running" }));
+
+app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));

@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from app.schemas.auth_dto import LoginRequest, TokenResponse
 from app.services.auth_service import validate_user
 from app.services.jwt_service import create_token, verify_token
+from pydantic import BaseModel
 
 router = APIRouter()
 
@@ -12,10 +13,14 @@ def login_user(request: LoginRequest):
         return {"access_token": token}
     raise HTTPException(status_code=401, detail="Invalid credentials")
 
+
+class TokenInput(BaseModel):
+    token: str
+
 @router.post("/verify-token")
-def verify_user_token(token: str):
+def verify_user_token(data: TokenInput):
     try:
-        payload = verify_token(token)
+        payload = verify_token(data.token)
         return {"valid": True, "payload": payload}
     except Exception:
         raise HTTPException(status_code=401, detail="Invalid token")

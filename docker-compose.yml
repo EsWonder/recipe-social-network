@@ -50,5 +50,22 @@ services:
       JWT_SECRET_KEY: supersecret
       KAFKA_BROKER: kafka:9092
 
+  register-user:
+    build:
+      context: ./apps/auth-domain/register-user
+    container_name: register-user
+    depends_on:
+      - auth-db
+      - kafka
+    ports:
+      - "3000:3000"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: auth_domain_db
+      POSTGRES_HOST: auth-db
+      POSTGRES_PORT: 5432
+      KAFKA_BROKER: kafka:9092
+
 volumes:
   auth_db_data:
