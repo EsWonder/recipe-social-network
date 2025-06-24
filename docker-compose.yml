@@ -1,19 +1,25 @@
-version: "3.9"
-
 services:
-  # 🧠 Zookeeper
+  auth-db:
+    image: postgres:15
+    container_name: auth-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: auth_domain_db
+    volumes:
+      - auth_db_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
   zookeeper:
-    image: confluentinc/cp-zookeeper:7.5.1
+    image: confluentinc/cp-zookeeper:7.6.0
     container_name: zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-    ports:
-      - "2181:2181"
 
-  # 💬 Kafka
   kafka:
-    image: confluentinc/cp-kafka:7.5.1
+    image: confluentinc/cp-kafka:7.6.0
     container_name: kafka
     depends_on:
       - zookeeper
@@ -22,94 +28,27 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
-  # 🛡️ auth-user microservice
   auth-user:
     build:
       context: ./apps/auth-domain/auth-user
-      dockerfile: Dockerfile
     container_name: auth-user
     depends_on:
+      - auth-db
       - kafka
-      - auth-user-db
-    env_file:
-      - ./apps/auth-domain/auth-user/.env
-    volumes:
-      - ./apps/auth-domain/auth-user:/app
-    restart: always
-
-  # 🗃️ auth-user PostgreSQL database
-  auth-user-db:
-    image: postgres:15
-    container_name: auth-user-db
     ports:
-      - "5440:5432"
+      - "8000:8000"
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: auth_user_db
-    volumes:
-      - auth-user-dbdata:/var/lib/postgresql/data
-
-  # 👤 register-user microservice
-  register-user:
-    build:
-      context: ./apps/auth-domain/register-user
-      dockerfile: Dockerfile
-    container_name: register-user
-    depends_on:
-      - kafka
-      - register-user-db
-    env_file:
-      - ./apps/auth-domain/register-user/.env
-    volumes:
-      - ./apps/auth-domain/register-user:/app
-    restart: always
-
-  # 🗃️ register-user PostgreSQL database
-  register-user-db:
-    image: postgres:15
-    container_name: register-user-db
-    ports:
-      - "5441:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: register_user_db
-    volumes:
-      - register-user-dbdata:/var/lib/postgresql/data
-
-  # 🔐 login-user microservice
-  login-user:
-    build:
-      context: ./apps/auth-domain/login-user
-      dockerfile: Dockerfile
-    container_name: login-user
-    depends_on:
-      - kafka
-      - login-user-db
-    env_file:
-      - ./apps/auth-domain/login-user/.env
-    volumes:
-      - ./apps/auth-domain/login-user:/app
-    restart: always
-
-  # 🗃️ login-user PostgreSQL database
-  login-user-db:
-    image: postgres:15
-    container_name: login-user-db
-    ports:
-      - "5442:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: login_user_db
-    volumes:
-      - login-user-dbdata:/var/lib/postgresql/data
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: auth_domain_db
+      POSTGRES_HOST: auth-db
+      POSTGRES_PORT: 5432
+      JWT_SECRET_KEY: supersecret
+      KAFKA_BROKER: kafka:9092
 
 volumes:
-  auth-user-dbdata:
-  register-user-dbdata:
-  login-user-dbdata:
+  auth_db_data:
