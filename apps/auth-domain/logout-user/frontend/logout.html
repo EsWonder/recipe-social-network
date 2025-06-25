@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Logout</title>
+</head>
+<body>
+  <h2>User Logout</h2>
+  <button id="logout-btn">Logout</button>
+  <p id="response"></p>
+
+  <script>
+    const responseText = document.getElementById("response");
+
+    document.getElementById("logout-btn").addEventListener("click", async () => {
+      try {
+        const res = await fetch("http://localhost:9000/logout", {
+          method: "POST"
+        });
+
+        const data = await res.json();
+        responseText.innerText = data.message;
+
+        // Simulación de cierre de sesión
+        localStorage.removeItem("token");
+      } catch (err) {
+        responseText.innerText = "Connection error";
+      }
+    });
+  </script>
+</body>
+</html>

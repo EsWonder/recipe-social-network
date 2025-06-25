@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Get Profile</title>
+</head>
+<body>
+  <h2>Get User Profile</h2>
+  <button id="get-profile">Fetch Profile</button>
+  <pre id="profile"></pre>
+
+  <script>
+    document.getElementById("get-profile").addEventListener("click", async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        document.getElementById("profile").innerText = "No token found";
+        return;
+      }
+
+      try {
+        const res = await fetch("http://localhost:3100/user/profile", {
+          method: "GET",
+          headers: {
+            "Authorization": "Bearer " + token
+          }
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          document.getElementById("profile").innerText = JSON.stringify(data, null, 2);
+        } else {
+          document.getElementById("profile").innerText = "Error: " + data.message;
+        }
+      } catch (err) {
+        document.getElementById("profile").innerText = "Connection error";
+      }
+    });
+  </script>
+</body>
+</html>

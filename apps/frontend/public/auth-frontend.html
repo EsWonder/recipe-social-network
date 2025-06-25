@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Auth-Domain Frontend</title>
+  <style>
+    body { font-family: sans-serif; }
+    .tab { display: none; }
+    .tab.active { display: block; }
+    nav button { margin: 5px; }
+    input { margin: 3px; }
+  </style>
+</head>
+<body>
+  <h1>Auth-Domain Panel</h1>
+  <nav>
+    <button onclick="showTab('register')">Register</button>
+    <button onclick="showTab('login')">Login</button>
+    <button onclick="showTab('profile')">Get Profile</button>
+    <button onclick="showTab('update')">Update Profile</button>
+    <button onclick="showTab('change')">Change Password</button>
+    <button onclick="logout()">Logout</button>
+  </nav>
+
+  <div id="register" class="tab">
+    <h3>Register</h3>
+    <input id="reg-name" placeholder="Name"><br>
+    <input id="reg-email" placeholder="Email"><br>
+    <input id="reg-pass" type="password" placeholder="Password"><br>
+    <button onclick="register()">Submit</button>
+    <p id="reg-result"></p>
+  </div>
+
+  <div id="login" class="tab">
+    <h3>Login</h3>
+    <input id="log-email" placeholder="Email"><br>
+    <input id="log-pass" type="password" placeholder="Password"><br>
+    <button onclick="login()">Login</button>
+    <p id="log-result"></p>
+  </div>
+
+  <div id="profile" class="tab">
+    <h3>Profile</h3>
+    <button onclick="getProfile()">Load Profile</button>
+    <pre id="profile-result"></pre>
+  </div>
+
+  <div id="update" class="tab">
+    <h3>Update Profile</h3>
+    <input id="upd-name" placeholder="New Name"><br>
+    <input id="upd-email" placeholder="New Email"><br>
+    <button onclick="updateProfile()">Update</button>
+    <p id="upd-result"></p>
+  </div>
+
+  <div id="change" class="tab">
+    <h3>Change Password</h3>
+    <input id="old-pass" type="password" placeholder="Current Password"><br>
+    <input id="new-pass" type="password" placeholder="New Password"><br>
+    <button onclick="changePassword()">Change</button>
+    <p id="chg-result"></p>
+  </div>
+
+  <script>
+    function showTab(id) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    async function register() {
+      const res = await fetch('http://localhost:8000/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: document.getElementById('reg-name').value,
+          email: document.getElementById('reg-email').value,
+          password: document.getElementById('reg-pass').value
+        })
+      });
+      const data = await res.json();
+      document.getElementById('reg-result').innerText = data.message || data.detail;
+    }
+
+    async function login() {
+      const res = await fetch('http://localhost:3000/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: document.getElementById('log-email').value,
+          password: document.getElementById('log-pass').value
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem('token', data.access_token);
+        document.getElementById('log-result').innerText = "Login successful!";
+      } else {
+        document.getElementById('log-result').innerText = data.message || data.detail;
+      }
+    }
+
+    async function getProfile() {
+      const token = localStorage.getItem('token');
+      const res = await fetch('http://localhost:3100/user/profile', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const data = await res.json();
+      document.getElementById('profile-result').innerText = JSON.stringify(data, null, 2);
+    }
+
+    async function updateProfile() {
+      const token = localStorage.getItem('token');
+      const res = await fetch('http://localhost:3200/update-profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          name: document.getElementById('upd-name').value,
+          email: document.getElementById('upd-email').value
+        })
+      });
+      const data = await res.json();
+      document.getElementById('upd-result').innerText = data.message || data.detail;
+    }
+
+    async function changePassword() {
+      const token = localStorage.getItem('token');
+      const res = await fetch('http://localhost:3300/user/change-password', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          currentPassword: document.getElementById('old-pass').value,
+          newPassword: document.getElementById('new-pass').value
+        })
+      });
+      const data = await res.json();
+      document.getElementById('chg-result').innerText = data.message || data.detail;
+    }
+
+    function logout() {
+      localStorage.removeItem('token');
+      alert('Logged out!');
+    }
+
+    showTab('register'); // default
+  </script>
+</body>
+</html>
