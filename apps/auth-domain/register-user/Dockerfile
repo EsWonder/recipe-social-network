@@ -1,19 +1,9 @@
-FROM node:18-alpine
+FROM python:3.11-slim
 
-# Establecer el directorio de trabajo
 WORKDIR /app
 
-# Copiar archivos de dependencias
-COPY package*.json ./
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Instalar dependencias
-RUN npm install
-
-# Copiar el resto de la app
-COPY . .
-
-# Exponer el puerto del servicio
-EXPOSE 3000
-
-# Comando de arranque
-CMD ["npm", "start"]
+COPY app/ ./app
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
