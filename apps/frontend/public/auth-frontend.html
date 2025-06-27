@@ -2,17 +2,78 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Auth-Domain Frontend</title>
+  <title>Recipe Social - Auth Panel</title>
   <style>
-    body { font-family: sans-serif; }
-    .tab { display: none; }
-    .tab.active { display: block; }
-    nav button { margin: 5px; }
-    input { margin: 3px; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ff6b6b;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      background-color: #fff3f3;
+      border-bottom: 1px solid #ddd;
+    }
+    nav button {
+      background: none;
+      border: none;
+      padding: 15px 20px;
+      margin: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      color: #333;
+      border-radius: 5px;
+    }
+    nav button:hover {
+      background-color: #ffe0e0;
+    }
+    .tab {
+      display: none;
+      max-width: 400px;
+      margin: 30px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .tab.active {
+      display: block;
+    }
+    input, button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 14px;
+    }
+    pre, p {
+      white-space: pre-wrap;
+      background: #f4f4f4;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #aaa;
+    }
   </style>
 </head>
 <body>
-  <h1>Auth-Domain Panel</h1>
+  <header>
+    <h1>🍲 Recipe Social - User Panel</h1>
+    <p>Manage your account in our delicious community!</p>
+  </header>
+
   <nav>
     <button onclick="showTab('register')">Register</button>
     <button onclick="showTab('login')">Login</button>
@@ -24,42 +85,46 @@
 
   <div id="register" class="tab">
     <h3>Register</h3>
-    <input id="reg-name" placeholder="Name"><br>
-    <input id="reg-email" placeholder="Email"><br>
-    <input id="reg-pass" type="password" placeholder="Password"><br>
+    <input id="reg-name" placeholder="Name">
+    <input id="reg-email" placeholder="Email">
+    <input id="reg-pass" type="password" placeholder="Password">
     <button onclick="register()">Submit</button>
     <p id="reg-result"></p>
   </div>
 
   <div id="login" class="tab">
     <h3>Login</h3>
-    <input id="log-email" placeholder="Email"><br>
-    <input id="log-pass" type="password" placeholder="Password"><br>
+    <input id="log-email" placeholder="Email">
+    <input id="log-pass" type="password" placeholder="Password">
     <button onclick="login()">Login</button>
     <p id="log-result"></p>
   </div>
 
   <div id="profile" class="tab">
-    <h3>Profile</h3>
+    <h3>Your Profile</h3>
     <button onclick="getProfile()">Load Profile</button>
     <pre id="profile-result"></pre>
   </div>
 
   <div id="update" class="tab">
     <h3>Update Profile</h3>
-    <input id="upd-name" placeholder="New Name"><br>
-    <input id="upd-email" placeholder="New Email"><br>
+    <input id="upd-name" placeholder="New Name">
+    <input id="upd-email" placeholder="New Email">
     <button onclick="updateProfile()">Update</button>
     <p id="upd-result"></p>
   </div>
 
   <div id="change" class="tab">
     <h3>Change Password</h3>
-    <input id="old-pass" type="password" placeholder="Current Password"><br>
-    <input id="new-pass" type="password" placeholder="New Password"><br>
+    <input id="old-pass" type="password" placeholder="Current Password">
+    <input id="new-pass" type="password" placeholder="New Password">
     <button onclick="changePassword()">Change</button>
     <p id="chg-result"></p>
   </div>
+
+  <footer>
+    &copy; 2025 Recipe Social Network
+  </footer>
 
   <script>
     function showTab(id) {
@@ -147,7 +212,7 @@
       alert('Logged out!');
     }
 
-    showTab('register'); // default
+    showTab('register');
   </script>
 </body>
 </html>
