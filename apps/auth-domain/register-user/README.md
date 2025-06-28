@@ -1,20 +1,40 @@
 # register-user Microservice
 
-Registers a user into a shared PostgreSQL database for auth-domain.
+## Overview
+This microservice handles user registration in the `auth` domain.
 
-## Endpoint
-- POST /register
+## Tech Stack
+- Language: Python
+- Framework: FastAPI
+- Database: PostgreSQL (shared)
+- Auth: bcrypt password hashing
 
-## Docker
+## Running Locally
 
+### Prerequisites
+- Docker & Docker Compose
+- PostgreSQL running with database `auth_db`
+
+### Steps
 ```bash
 docker build -t register-user .
-docker run --env-file .env -p 8000:8000 register-user
+docker run -p 8001:8001 --env-file .env register-user
 ```
 
-## Environment Variables
-- DB_HOST
-- DB_PORT
-- DB_NAME
-- DB_USER
-- DB_PASS
+## Endpoint
+
+### `POST /register`
+Request:
+```json
+{
+  "email": "user@example.com",
+  "password": "123456"
+}
+```
+
+Response:
+```json
+{
+  "message": "User created successfully"
+}
+```
