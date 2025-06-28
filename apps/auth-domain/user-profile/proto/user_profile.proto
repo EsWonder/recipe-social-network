@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package userprofile;
+
+service UserProfileService {
+  rpc GetProfile (UserId) returns (UserProfile);
+  rpc UpdateProfile (UpdateProfileRequest) returns (UserProfile);
+}
+
+message UserId {
+  int32 id = 1;
+}
+
+message UpdateProfileRequest {
+  int32 id = 1;
+  string name = 2;
+  string phone = 3;
+  string city = 4;
+  string address = 5;
+  string birthdate = 6;
+  string gender = 7;
+}
+
+message UserProfile {
+  int32 id = 1;
+  string email = 2;
+  string name = 3;
+  string phone = 4;
+  string city = 5;
+  string address = 6;
+  string birthdate = 7;
+  string gender = 8;
+}

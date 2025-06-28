@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14
+    container_name: auth_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: auth_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - authnet
+
+  auth-user:
+    build: ./auth-user
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./auth-user/.env
+    depends_on:
+      - postgres
+    networks:
+      - authnet
+
+  register-user:
+    build: ./register-user
+    ports:
+      - "8001:8001"
+    env_file:
+      - ./register-user/.env
+    depends_on:
+      - postgres
+    networks:
+      - authnet
+
+  user-session:
+    build: ./user-session
+    ports:
+      - "8002:8002"
+    env_file:
+      - ./user-session/.env
+    depends_on:
+      - postgres
+    networks:
+      - authnet
+
+  password-recovery:
+    build: ./password-recovery
+    ports:
+      - "8003:8003"
+    env_file:
+      - ./password-recovery/.env
+    depends_on:
+      - postgres
+    networks:
+      - authnet
+
+  user-profile:
+    build: ./user-profile
+    ports:
+      - "50051:50051"  # gRPC
+    env_file:
+      - ./user-profile/.env
+    depends_on:
+      - postgres
+    networks:
+      - authnet
+
+volumes:
+  pgdata:
+
+networks:
+  authnet:
