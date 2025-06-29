@@ -1,0 +1,11 @@
+{
+  "name": "rate-recipe",
+  "version": "1.0.0",
+  "description": "Recipe rating microservice",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^6.0.14",
+    "jsonwebtoken": "^8.5.1"
+  }
+}
