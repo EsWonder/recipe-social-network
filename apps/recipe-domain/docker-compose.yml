@@ -1,0 +1,89 @@
+
+version: '3.8'
+
+services:
+  # Microservicio para crear recetas
+  create-recipe:
+    build:
+      context: ./create-recipe
+    container_name: create-recipe
+    ports:
+      - "5001:5000"
+    environment:
+      - MONGO_URI=mongodb://database:27017/recipes_db
+    networks:
+      - recipe_network
+    depends_on:
+      - database
+
+  # Microservicio para eliminar recetas
+  delete-recipe:
+    build:
+      context: ./delete-recipe
+    container_name: delete-recipe
+    ports:
+      - "5002:5000"
+    environment:
+      - MONGO_URI=mongodb://database:27017/recipes_db
+    networks:
+      - recipe_network
+    depends_on:
+      - database
+
+  # Microservicio para obtener recetas
+  get-recipes:
+    build:
+      context: ./get-recipes
+    container_name: get-recipes
+    ports:
+      - "5003:5000"
+    environment:
+      - MONGO_URI=mongodb://database:27017/recipes_db
+    networks:
+      - recipe_network
+    depends_on:
+      - database
+
+  # Microservicio para calificar recetas
+  rate-recipe:
+    build:
+      context: ./rate-recipe
+    container_name: rate-recipe
+    ports:
+      - "5004:5000"
+    environment:
+      - MONGO_URI=mongodb://database:27017/recipes_db
+    networks:
+      - recipe_network
+    depends_on:
+      - database
+
+  # Microservicio para actualizar recetas
+  update-recipe:
+    build:
+      context: ./update-recipe
+    container_name: update-recipe
+    ports:
+      - "5005:5000"
+    environment:
+      - MONGO_URI=mongodb://database:27017/recipes_db
+    networks:
+      - recipe_network
+    depends_on:
+      - database
+
+  # Base de datos MongoDB
+  database:
+    image: mongo:latest
+    container_name: recipe_db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=your_password
+    ports:
+      - "27017:27017"
+    networks:
+      - recipe_network
+
+networks:
+  recipe_network:
+    driver: bridge

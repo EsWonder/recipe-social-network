@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,8 +55,8 @@
       color: #930303;
     }
     .top-recipes img {
-  max-height: 100px;
-  object-fit: cover;
+      max-height: 100px;
+      object-fit: cover;
       width: 100%;
       height: auto;
       border-radius: 8px;
@@ -85,9 +86,9 @@
       margin-bottom: 15px;
     }
     .top-recipe-card {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
       margin-bottom: 20px;
       background: white;
       padding: 10px;
@@ -95,7 +96,7 @@
       box-shadow: 0 1px 6px rgba(0,0,0,0.1);
     }
     .top-recipe-card p {
-  flex-grow: 1;
+      flex-grow: 1;
       margin: 5px 0 0 0;
     }
   </style>
@@ -106,7 +107,7 @@
   <h1>🍲 Recipe Social</h1>
   <div class="d-flex align-items-center gap-3">
     <input class="form-control" type="search" placeholder="Buscar recetas..." />
-    <button class="btn btn-outline-light">Mi perfil</button>
+    <button class="btn btn-outline-light" onclick="openProfileModal()">Mi perfil</button>
     <button class="btn btn-outline-light" onclick="logout()">Cerrar sesión</button>
   </div>
 </nav>
@@ -117,53 +118,33 @@
     <!-- Feed principal -->
     <div class="col-lg-8 feed">
       <h3 class="mb-4">Bienvenido, <span id="username">Usuario</span> 👋</h3>
-
-      <!-- Publicación -->
-      <div class="card-recipe">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <div class="d-flex align-items-center">
-            <img src="https://i.imgur.com/zvImKfC.png" width="45" class="me-2 rounded-circle"/>
-            <strong>User123</strong>
-          </div>
-          <button class="btn btn-sm btn-outline-secondary">Seguir</button>
-        </div>
-        <p><strong>Descripción:</strong> Deliciosa sopa de zanahoria con crema y perejil.</p>
-        <img src="https://i.imgur.com/sM7aRIg.jpg" class="main-img" style="max-height: 280px; object-fit: cover;" />
-        <div class="actions d-flex justify-content-around mt-3">
-          <span><i class="fas fa-heart"></i> Me gusta (123)</span>
-          <span><i class="fas fa-comment-alt"></i> Comentarios (45)</span>
-          <span><i class="fas fa-star"></i> Favoritos</span>
-        </div>
-      </div>
-
     </div>
-
-    <!-- Barra lateral -->
-    <div class="col-lg-4 sidebar">
-      <h4>Top Recetas</h4>
-      <div class="top-recipes">
-        <div class="top-recipe-card">
-          <img src="https://i.imgur.com/sM7aRIg.jpg" />
-          <p><i class="fas fa-thumbs-up"></i> 123 likes</p>
-        </div>
-        <div class="top-recipe-card">
-          <img src="https://i.imgur.com/sM7aRIg.jpg" />
-          <p><i class="fas fa-thumbs-up"></i> 98 likes</p>
-        </div>
-        <div class="top-recipe-card">
-          <img src="https://i.imgur.com/sM7aRIg.jpg" />
-          <p><i class="fas fa-thumbs-up"></i> 87 likes</p>
-        </div>
-      </div>
-    </div>
-
   </div>
 </div>
 
 <!-- Botón flotante -->
 <button class="floating-btn" onclick="openModal()">+ Crear receta</button>
 
-<!-- Modal -->
+<!-- Modal para "Mi Perfil" -->
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="profileModalLabel">Mi Perfil</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <h4>Recetas Subidas</h4>
+        <div id="recipes-list"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para "Crear receta" -->
 <div class="modal fade" id="recipeModal" tabindex="-1" aria-labelledby="recipeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -204,6 +185,12 @@
 
   function openModal() {
     const modal = new bootstrap.Modal(document.getElementById('recipeModal'));
+    modal.show();
+  }
+
+  // Abrir modal de perfil
+  function openProfileModal() {
+    const modal = new bootstrap.Modal(document.getElementById('profileModal'));
     modal.show();
   }
 </script>
