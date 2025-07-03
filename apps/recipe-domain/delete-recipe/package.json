@@ -1,11 +1,13 @@
 {
   "name": "delete-recipe",
   "version": "1.0.0",
-  "description": "Recipe delete microservice",
+  "description": "Microservicio para eliminar recetas en la red social de recetas",
   "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "express": "^4.17.1",
-    "mongoose": "^6.0.14",
-    "jsonwebtoken": "^8.5.1"
+    "mongoose": "^5.10.9"
   }
 }

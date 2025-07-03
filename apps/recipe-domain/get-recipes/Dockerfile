@@ -1,13 +1,20 @@
+# Dockerfile para microservicios en Node.js
 FROM node:16
 
+# Crear y establecer el directorio de trabajo
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+# Copiar los archivos de dependencias
+COPY package.json ./
 
+# Instalar las dependencias
 RUN npm install
 
+# Copiar el resto del código del microservicio
 COPY . .
 
-EXPOSE 4001
+# Exponer el puerto de la aplicación
+EXPOSE 5000
 
-CMD ["node", "index.js"]
+# Ejecutar el microservicio
+CMD ["npm", "start"]

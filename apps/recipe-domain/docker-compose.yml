@@ -5,7 +5,7 @@ services:
   # Microservicio para crear recetas
   create-recipe:
     build:
-      context: ./create-recipe
+      context: ./recipe-domain/create-recipe
     container_name: create-recipe
     ports:
       - "5001:5000"
@@ -19,7 +19,7 @@ services:
   # Microservicio para eliminar recetas
   delete-recipe:
     build:
-      context: ./delete-recipe
+      context: ./recipe-domain/delete-recipe
     container_name: delete-recipe
     ports:
       - "5002:5000"
@@ -33,7 +33,7 @@ services:
   # Microservicio para obtener recetas
   get-recipes:
     build:
-      context: ./get-recipes
+      context: ./recipe-domain/get-recipes
     container_name: get-recipes
     ports:
       - "5003:5000"
@@ -47,7 +47,7 @@ services:
   # Microservicio para calificar recetas
   rate-recipe:
     build:
-      context: ./rate-recipe
+      context: ./recipe-domain/rate-recipe
     container_name: rate-recipe
     ports:
       - "5004:5000"
@@ -61,7 +61,7 @@ services:
   # Microservicio para actualizar recetas
   update-recipe:
     build:
-      context: ./update-recipe
+      context: ./recipe-domain/update-recipe
     container_name: update-recipe
     ports:
       - "5005:5000"
@@ -81,6 +81,16 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=your_password
     ports:
       - "27017:27017"
+    networks:
+      - recipe_network
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "8080:80"
     networks:
       - recipe_network
 

@@ -1,13 +1,20 @@
-FROM node:16
+# Usar una imagen base de Node.js
+FROM node:14
 
+# Establecer el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+# Copiar el archivo package.json y package-lock.json
+COPY package*.json ./
 
+# Instalar las dependencias
 RUN npm install
 
+# Copiar el código fuente
 COPY . .
 
-EXPOSE 4000
+# Exponer el puerto en el que se ejecutará el microservicio
+EXPOSE 3000
 
+# Comando para iniciar el microservicio
 CMD ["node", "index.js"]
